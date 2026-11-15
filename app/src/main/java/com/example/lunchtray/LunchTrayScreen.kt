@@ -37,8 +37,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.lunchtray.datasource.DataSource
+import com.example.lunchtray.ui.AccompanimentMenuScreen
+import com.example.lunchtray.ui.CheckoutScreen
 import com.example.lunchtray.ui.EntreeMenuScreen
 import com.example.lunchtray.ui.OrderViewModel
+import com.example.lunchtray.ui.SideDishMenuScreen
 import com.example.lunchtray.ui.StartOrderScreen
 
 enum class Screen(@StringRes val title: Int) {
@@ -126,6 +129,33 @@ fun LunchTrayApp() {
                         navController.navigate(Screen.SideDish.name)
                     },
                     onSelectionChanged = viewModel::updateEntree
+                )
+            }
+            composable(route = Screen.SideDish.name) {
+                SideDishMenuScreen(
+                    options = DataSource.sideDishMenuItems,
+                    onCancelButtonClicked = navigateToStart,
+                    onNextButtonClicked = {
+                        navController.navigate(Screen.Accompaniment.name)
+                    },
+                    onSelectionChanged = viewModel::updateSideDish
+                )
+            }
+            composable(route = Screen.Accompaniment.name) {
+                AccompanimentMenuScreen(
+                    options = DataSource.accompanimentMenuItems,
+                    onCancelButtonClicked = navigateToStart,
+                    onNextButtonClicked = {
+                        navController.navigate(Screen.Checkout.name)
+                    },
+                    onSelectionChanged = viewModel::updateAccompaniment
+                )
+            }
+            composable(route = Screen.Checkout.name) {
+                CheckoutScreen(
+                    orderUiState = uiState,
+                    onNextButtonClicked = navigateToStart,
+                    onCancelButtonClicked = navigateToStart
                 )
             }
         }
