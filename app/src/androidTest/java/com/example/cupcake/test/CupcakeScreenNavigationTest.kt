@@ -17,7 +17,6 @@ package com.example.cupcake.test
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
