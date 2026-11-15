@@ -101,4 +101,24 @@ class ReplyAppTest {
             composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].body)
         ).assertIsDisplayed()
     }
+
+    @Test
+    @TestExpandedWidth
+    fun expandedDevice_backFromDetailsRestoresDrawer() {
+        composeTestRule.setContent {
+            ReplyApp(
+                windowSize = WindowWidthSizeClass.Expanded
+            )
+        }
+
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].subject)
+        ).performClick()
+        composeTestRule.onNodeWithContentDescriptionForStringId(R.string.navigation_back)
+            .performClick()
+
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer).assertExists()
+        composeTestRule.onNodeWithContentDescriptionForStringId(R.string.navigation_back)
+            .assertDoesNotExist()
+    }
 }
