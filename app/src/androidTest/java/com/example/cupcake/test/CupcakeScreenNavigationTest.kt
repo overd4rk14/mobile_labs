@@ -80,6 +80,41 @@ class CupcakeScreenNavigationTest {
         navController.assertCurrentRouteName(CupcakeScreen.Summary.name)
     }
 
+    @Test
+    fun cupcakeNavHost_clickBackOnFlavorScreen_navigatesToStartOrderScreen() {
+        navigateToFlavorScreen()
+        performNavigateUp()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickCancelOnFlavorScreen_navigatesToStartOrderScreen() {
+        navigateToFlavorScreen()
+        composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickBackOnPickupScreen_navigatesToFlavorScreen() {
+        navigateToPickupScreen()
+        performNavigateUp()
+        navController.assertCurrentRouteName(CupcakeScreen.Flavor.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickCancelOnPickupScreen_navigatesToStartOrderScreen() {
+        navigateToPickupScreen()
+        composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
+    @Test
+    fun cupcakeNavHost_clickCancelOnSummaryScreen_navigatesToStartOrderScreen() {
+        navigateToSummaryScreen()
+        composeTestRule.onNodeWithStringId(R.string.cancel).performClick()
+        navController.assertCurrentRouteName(CupcakeScreen.Start.name)
+    }
+
     private fun navigateToFlavorScreen() {
         composeTestRule.onNodeWithStringId(R.string.one_cupcake).performClick()
         composeTestRule.onNodeWithStringId(R.string.chocolate).performClick()
@@ -94,6 +129,11 @@ class CupcakeScreenNavigationTest {
         navigateToPickupScreen()
         composeTestRule.onNodeWithText(getFormattedDate()).performClick()
         composeTestRule.onNodeWithStringId(R.string.next).performClick()
+    }
+
+    private fun performNavigateUp() {
+        val backText = composeTestRule.activity.getString(R.string.back_button)
+        composeTestRule.onNodeWithContentDescription(backText).performClick()
     }
 
     private fun getFormattedDate(): String {
