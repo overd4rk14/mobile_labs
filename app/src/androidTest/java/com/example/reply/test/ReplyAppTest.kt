@@ -17,8 +17,11 @@ package com.example.reply.test
 
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.example.reply.R
+import com.example.reply.data.local.LocalEmailsDataProvider
 import com.example.reply.ui.ReplyApp
 import org.junit.Rule
 import org.junit.Test
@@ -75,5 +78,27 @@ class ReplyAppTest {
         composeTestRule.onNodeWithTagForStringId(
             R.string.navigation_drawer
         ).assertExists()
+    }
+
+    @Test
+    @TestExpandedWidth
+    fun expandedDevice_openingEmailShowsDetailsWithoutDrawer() {
+        composeTestRule.setContent {
+            ReplyApp(
+                windowSize = WindowWidthSizeClass.Expanded
+            )
+        }
+
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer).assertExists()
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].subject)
+        ).performClick()
+
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer).assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescriptionForStringId(R.string.navigation_back)
+            .assertExists()
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].body)
+        ).assertIsDisplayed()
     }
 }
