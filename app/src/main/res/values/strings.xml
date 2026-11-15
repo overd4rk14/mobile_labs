@@ -6,6 +6,9 @@
 
     <string name="city">Казань</string>
     <string name="place_not_found">Место не найдено</string>
+    <string name="place_photo">Фото: %1$s</string>
+    <string name="place_rating">%1$.1f из 5</string>
+    <string name="rating_description">Рейтинг</string>
 
     <string name="rest1">Чизерия</string>
     <string name="rest2">Утка в котелке</string>

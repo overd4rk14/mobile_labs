@@ -16,6 +16,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,9 +52,9 @@ fun CityScreen(
                         fontWeight = FontWeight.Bold
                     )
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFE1F5FE),
-                    titleContentColor = Color.Black
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
         }
@@ -98,7 +99,7 @@ fun CategoryCard(
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painterResource(id = category.imageRes),
-                contentDescription = null,
+                contentDescription = categoryName,
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(12.dp)),

@@ -190,7 +190,7 @@ fun ExpandedPlaceItem(
         Row(modifier = Modifier.padding(12.dp)) {
             Image(
                 painter = painterResource(id = place.imageRes),
-                contentDescription = null,
+                contentDescription = stringResource(id = place.title),
                 modifier = Modifier
                     .size(60.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -228,7 +228,7 @@ fun ExpandedDetailScreen(place: Place) {
 
             Image(
                 painter = painterResource(id = place.imageRes),
-                contentDescription = null,
+                contentDescription = stringResource(id = place.title),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
