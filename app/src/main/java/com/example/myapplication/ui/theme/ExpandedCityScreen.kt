@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,18 +37,27 @@ fun ExpandedCityScreen(
     onPlaceSelected: (Place) -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .safeDrawingPadding(),
         color = MaterialTheme.colorScheme.background
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(0.8f)) {
                 ExpandedCityScreen(
                     categories = uiState.categories,
                     selectedCategory = uiState.selectedCategory,
                     onCategorySelected = onCategorySelected
                 )
             }
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(1.1f)) {
+                ExpandedCategoryScreen(
+                    places = uiState.places,
+                    selectedPlace = uiState.selectedPlace,
+                    onPlaceSelected = onPlaceSelected
+                )
+            }
+            Column(modifier = Modifier.weight(1.5f)) {
                 uiState.selectedPlace?.let { place ->
                     ExpandedDetailScreen(place = place)
                 } ?: Surface(modifier = Modifier.fillMaxSize()) {
@@ -56,13 +66,6 @@ fun ExpandedCityScreen(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                ExpandedCategoryScreen(
-                    places = uiState.places,
-                    selectedPlace = uiState.selectedPlace,
-                    onPlaceSelected = onPlaceSelected
-                )
             }
         }
     }
