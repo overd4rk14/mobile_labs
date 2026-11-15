@@ -121,4 +121,23 @@ class ReplyAppTest {
         composeTestRule.onNodeWithContentDescriptionForStringId(R.string.navigation_back)
             .assertDoesNotExist()
     }
+
+    @Test
+    @TestCompactWidth
+    fun compactDevice_backFromDetailsRestoresBottomNavigation() {
+        composeTestRule.setContent {
+            ReplyApp(
+                windowSize = WindowWidthSizeClass.Compact
+            )
+        }
+
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].subject)
+        ).performClick()
+        composeTestRule.onNodeWithContentDescriptionForStringId(R.string.navigation_back)
+            .performClick()
+
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_bottom).assertExists()
+        composeTestRule.onNodeWithTagForStringId(R.string.details_screen).assertDoesNotExist()
+    }
 }
