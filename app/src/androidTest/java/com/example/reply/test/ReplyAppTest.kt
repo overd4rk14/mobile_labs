@@ -140,4 +140,25 @@ class ReplyAppTest {
         composeTestRule.onNodeWithTagForStringId(R.string.navigation_bottom).assertExists()
         composeTestRule.onNodeWithTagForStringId(R.string.details_screen).assertDoesNotExist()
     }
+
+    @Test
+    @TestMediumWidth
+    fun mediumDevice_backFromDetailsRestoresNavigationRail() {
+        composeTestRule.setContent {
+            ReplyApp(
+                windowSize = WindowWidthSizeClass.Medium
+            )
+        }
+
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_rail).assertExists()
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].subject)
+        ).performClick()
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_rail).assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescriptionForStringId(R.string.navigation_back)
+            .performClick()
+
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_rail).assertExists()
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_bottom).assertDoesNotExist()
+    }
 }
