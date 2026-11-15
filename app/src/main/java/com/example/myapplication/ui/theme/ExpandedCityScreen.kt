@@ -17,8 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -29,12 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.Category
 import com.example.myapplication.data.Place
-import com.example.myapplication.data.categories
-import com.example.myapplication.data.places
-import com.example.myapplication.ui.theme.utils.CityAppState
+import com.example.myapplication.ui.CityUiState
 
 @Composable
-fun ExpandedCityScreen(appState: CityAppState) {
+fun ExpandedCityScreen(
+    uiState: CityUiState,
+    onCategorySelected: (Category) -> Unit,
+    onPlaceSelected: (Place) -> Unit
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -42,38 +42,26 @@ fun ExpandedCityScreen(appState: CityAppState) {
         Row(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.weight(1f)) {
                 ExpandedCityScreen(
-                    categories = categories,
-                    selectedCategory = appState.selectedCategory,
-                    onCategorySelected = { category ->
-                        appState.selectCategory(category)
-                    }
+                    categories = uiState.categories,
+                    selectedCategory = uiState.selectedCategory,
+                    onCategorySelected = onCategorySelected
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
-                if (appState.selectedPlace != null) {
-                    ExpandedDetailScreen(place = appState.selectedPlace!!)
-                } else {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = "Выберите место",
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
+                uiState.selectedPlace?.let { place ->
+                    ExpandedDetailScreen(place = place)
+                } ?: Surface(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = "Выберите место",
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
             Column(modifier = Modifier.weight(1f)) {
-                val currentPlaces = if (appState.selectedCategory != null) {
-                    places.filter { it.category == appState.selectedCategory?.type }
-                } else {
-                    emptyList()
-                }
-
                 ExpandedCategoryScreen(
-                    places = currentPlaces,
-                    selectedPlace = appState.selectedPlace,
-                    onPlaceSelected = { place ->
-                        appState.selectPlace(place)
-                    }
+                    places = uiState.places,
+                    selectedPlace = uiState.selectedPlace,
+                    onPlaceSelected = onPlaceSelected
                 )
             }
         }

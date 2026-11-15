@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.data.Categories
 import com.example.myapplication.data.Place
-import com.example.myapplication.data.places
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,17 +48,18 @@ import com.example.myapplication.data.places
 fun CategoryScreen(
     navController: NavController,
     categoryName: String,
+    places: List<Place>,
     onPlaceSelected: (Place) -> Unit = {}
 ) {
     val currentCategory = Categories.entries.find { it.name == categoryName }
-    val filteredPlaces = places.filter { it.category == currentCategory }
+    val categoryTitle = currentCategory?.let { stringResource(it.title) } ?: categoryName
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = categoryName,
+                        text = categoryTitle,
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -86,7 +86,7 @@ fun CategoryScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
-            items(filteredPlaces) { place ->
+            items(places) { place ->
                 PlaceCard(
                     place = place,
                     navController = navController,

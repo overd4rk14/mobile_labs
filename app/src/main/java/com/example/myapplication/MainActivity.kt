@@ -5,32 +5,29 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.findNavController
-import androidx.compose.foundation.background
+import androidx.compose.runtime.getValue
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.navigation.NavController
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.data.Category
+import com.example.myapplication.data.Place
+import com.example.myapplication.ui.CityUiState
+import com.example.myapplication.ui.CityViewModel
 import com.example.myapplication.ui.theme.CityScreen
 import com.example.myapplication.ui.theme.DetailScreen
 import com.example.myapplication.ui.theme.ExpandedCityScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.theme.utils.CityAppState
 import com.example.myapplication.ui.theme.utils.CityContentType
-import com.example.myapplication.ui.theme.utils.rememberCityAppState
 import com.example.mycity.ui.theme.CategoryScreen
-
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -52,23 +49,39 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CityApp(windowSize: WindowWidthSizeClass) {
+fun CityApp(
+    windowSize: WindowWidthSizeClass,
+    cityViewModel: CityViewModel = viewModel()
+) {
+    val uiState by cityViewModel.uiState.collectAsStateWithLifecycle()
     val contentType = when (windowSize) {
         WindowWidthSizeClass.Expanded -> CityContentType.LIST_AND_DETAIL
         else -> CityContentType.LIST_ONLY
     }
 
-    val appState = rememberCityAppState(contentType)
-
     if (contentType == CityContentType.LIST_AND_DETAIL) {
-        ExpandedCityScreen(appState = appState)
+        ExpandedCityScreen(
+            uiState = uiState,
+            onCategorySelected = cityViewModel::selectCategory,
+            onPlaceSelected = cityViewModel::selectPlace
+        )
     } else {
-        CompactCityApp(appState = appState)
+        CompactCityApp(
+            uiState = uiState,
+            onCategorySelected = cityViewModel::selectCategory,
+            onPlaceSelected = cityViewModel::selectPlace,
+            findPlace = cityViewModel::findPlace
+        )
     }
 }
 
 @Composable
-fun CompactCityApp(appState: CityAppState) {
+fun CompactCityApp(
+    uiState: CityUiState,
+    onCategorySelected: (Category) -> Unit,
+    onPlaceSelected: (Place) -> Unit,
+    findPlace: (Int) -> Place?
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -78,26 +91,26 @@ fun CompactCityApp(appState: CityAppState) {
         composable("city") {
             CityScreen(
                 navController = navController,
-                onCategorySelected = { category ->
-                    appState.selectCategory(category)
-                }
+                onCategorySelected = onCategorySelected
             )
         }
         composable("category/{categoryName}") { backStackEntry ->
-            val categoryName = backStackEntry.arguments?.getString("categoryName") ?: ""
+            val categoryName = backStackEntry.arguments?.getString("categoryName").orEmpty()
             CategoryScreen(
                 navController = navController,
                 categoryName = categoryName,
-                onPlaceSelected = { place ->
-                    appState.selectPlace(place)
-                }
+                places = uiState.places,
+                onPlaceSelected = onPlaceSelected
             )
         }
         composable("detail/{placeId}") { backStackEntry ->
-            val placeId = backStackEntry.arguments?.getString("placeId")?.toIntOrNull() ?: 0
+            val placeId = backStackEntry.arguments?.getString("placeId")?.toIntOrNull()
+            val place = placeId?.let { id ->
+                uiState.selectedPlace?.takeIf { it.id == id } ?: findPlace(id)
+            }
             DetailScreen(
                 navController = navController,
-                placeId = placeId
+                place = place
             )
         }
     }
