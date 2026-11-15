@@ -20,10 +20,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.lunchtray.ui.OrderViewModel
 
-// TODO: Screen enum
+enum class Screen(@StringRes val title: Int) {
+    Start(R.string.app_name),
+    Entree(R.string.choose_entree),
+    SideDish(R.string.choose_side_dish),
+    Accompaniment(R.string.choose_accompaniment),
+    Checkout(R.string.order_checkout)
+}
 
 // TODO: AppBar
 
