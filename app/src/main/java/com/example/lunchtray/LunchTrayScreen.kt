@@ -27,12 +27,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.lunchtray.datasource.DataSource
+import com.example.lunchtray.ui.EntreeMenuScreen
 import com.example.lunchtray.ui.OrderViewModel
+import com.example.lunchtray.ui.StartOrderScreen
 
 enum class Screen(@StringRes val title: Int) {
     Start(R.string.app_name),
@@ -78,6 +85,15 @@ fun LunchTrayApp() {
     // Create ViewModel
     val viewModel: OrderViewModel = viewModel()
 
+    val navigateToStart = {
+        viewModel.resetOrder()
+        navController.navigate(Screen.Start.name) {
+            popUpTo(Screen.Start.name) {
+                inclusive = false
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             LunchTrayAppBar(
@@ -89,6 +105,29 @@ fun LunchTrayApp() {
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
 
-        // TODO: Navigation host
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Start.name,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = Screen.Start.name) {
+                StartOrderScreen(
+                    onStartOrderButtonClicked = {
+                        navController.navigate(Screen.Entree.name)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            composable(route = Screen.Entree.name) {
+                EntreeMenuScreen(
+                    options = DataSource.entreeMenuItems,
+                    onCancelButtonClicked = navigateToStart,
+                    onNextButtonClicked = {
+                        navController.navigate(Screen.SideDish.name)
+                    },
+                    onSelectionChanged = viewModel::updateEntree
+                )
+            }
+        }
     }
 }
