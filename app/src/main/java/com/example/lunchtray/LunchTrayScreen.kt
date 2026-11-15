@@ -92,7 +92,7 @@ fun LunchTrayApp() {
         viewModel.resetOrder()
         navController.navigate(Screen.Start.name) {
             popUpTo(Screen.Start.name) {
-                inclusive = false
+                inclusive = true
             }
         }
     }
