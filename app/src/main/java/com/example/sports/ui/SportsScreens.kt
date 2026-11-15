@@ -64,6 +64,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -414,6 +415,21 @@ fun SportsListPreview() {
                 sports = LocalSportsDataProvider.getSportsData(),
                 onClick = {},
             )
+        }
+    }
+
+    @Preview(device = Devices.TABLET)
+    @Composable
+    fun SportsListAndDetailsPreview() {
+        SportsTheme {
+            Surface {
+                SportsListAndDetail(
+                    sports = LocalSportsDataProvider.getSportsData(),
+                    selectedSport = LocalSportsDataProvider.defaultSport,
+                    onClick = {},
+                    onBackPressed = {},
+                )
+            }
         }
     }
 }
