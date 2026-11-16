@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,7 +60,7 @@ fun ReplyListOnlyContent(
     val emails = replyUiState.currentMailboxEmails
 
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.testTag(stringResource(R.string.email_list)),
         verticalArrangement = Arrangement.spacedBy(
             dimensionResource(R.dimen.email_list_item_vertical_spacing)
         )
@@ -98,7 +99,8 @@ fun ReplyListAndDetailContent(
             contentPadding = WindowInsets.statusBars.asPaddingValues(),
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = dimensionResource(R.dimen.email_list_only_horizontal_padding)),
+                .padding(horizontal = dimensionResource(R.dimen.email_list_only_horizontal_padding))
+                .testTag(stringResource(R.string.email_list)),
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(R.dimen.email_list_item_vertical_spacing)
             )

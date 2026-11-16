@@ -22,6 +22,7 @@ import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.example.reply.R
@@ -61,6 +62,9 @@ class ReplyAppTest {
 
         composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer).assertExists()
         composeTestRule.onNodeWithTagForStringId(R.string.details_screen).assertExists()
+        composeTestRule.onNodeWithTagForStringId(R.string.email_list).performScrollToNode(
+            hasText(composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].subject))
+        )
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].subject)
         ).performClick()

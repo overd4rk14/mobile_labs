@@ -25,6 +25,7 @@ import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performClick
 import com.example.reply.R
 import com.example.reply.data.local.LocalEmailsDataProvider
@@ -46,6 +47,9 @@ class ReplyAppStateRestorationTest {
         val selectedEmail = LocalEmailsDataProvider.allEmails[2]
         val selectedEmailBody = composeTestRule.activity.getString(selectedEmail.body)
 
+        composeTestRule.onNodeWithTagForStringId(R.string.email_list).performScrollToNode(
+            hasText(composeTestRule.activity.getString(selectedEmail.subject))
+        )
         composeTestRule.onNodeWithText(selectedEmailBody).assertIsDisplayed()
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(selectedEmail.subject)
@@ -70,7 +74,9 @@ class ReplyAppStateRestorationTest {
         val selectedEmail = LocalEmailsDataProvider.allEmails[2]
         val selectedEmailBody = composeTestRule.activity.getString(selectedEmail.body)
 
-        composeTestRule.onNodeWithText(selectedEmailBody).assertIsDisplayed()
+        composeTestRule.onNodeWithTagForStringId(R.string.email_list).performScrollToNode(
+            hasText(composeTestRule.activity.getString(selectedEmail.subject))
+        )
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(selectedEmail.subject)
         ).performClick()
